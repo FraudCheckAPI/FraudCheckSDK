@@ -11,7 +11,7 @@ message or the status.
 
 | Language | Where | Runtime | Install |
 |---|---|---|---|
-| .NET | [`dotnet/`](dotnet/) | .NET Framework 4.6.1+ / .NET 8+ | build from source — NuGet package coming soon |
+| .NET | [`dotnet/`](dotnet/) | .NET Framework 4.6.1+ / .NET 8+ | [`dotnet add package FraudCheck.Client`](https://www.nuget.org/packages/FraudCheck.Client) |
 | Python | [`python/fraudcheck.py`](python/fraudcheck.py) | Python 3.8+ | drop the file in — stdlib only |
 | Node.js | [`node/fraudcheck.js`](node/fraudcheck.js) | Node 18+ | drop the file in — uses global `fetch` |
 | PHP | [`php/FraudCheck.php`](php/FraudCheck.php) | PHP 7.4+ | drop the file in — uses the cURL extension |
@@ -138,5 +138,3 @@ dashboard under **Docs & code**.
 ## License
 
 [MIT](LICENSE) — © F7 Software, Inc.
-
-
