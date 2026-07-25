@@ -24,7 +24,8 @@
     <PackageProjectUrl>https://fraudcheckapi.com</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://fraudcheckapi.com</RepositoryUrl>
+    <RepositoryUrl>https://github.com/FraudCheckAPI/FraudCheckSDK</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
