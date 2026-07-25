@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- netstandard2.0 is what lets this install on .NET Framework 4.6.1+, .NET Core, Xamarin and Unity —
+         i.e. the shops most likely to be buying fraud screening, not just greenfield services.
+         net8.0 gets the modern BCL (System.Text.Json in-box, better HttpClient) for everyone else. -->
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata -->
+  <PropertyGroup>
+    <PackageId>FraudCheck.Client</PackageId>
+    <Version>1.0.0-preview.1</Version>
+    <Authors>F7 Software</Authors>
+    <Company>F7 Software Inc</Company>
+    <Product>FraudCheck API</Product>
+    <Description>Official .NET client for the FraudCheck API. Screen an IP, email, phone and shipping country in one call and get per-check results, a composite advisory score and stable reason codes. Checks, not verdicts — you make the decision.</Description>
+    <PackageTags>fraud;fraud-detection;risk;screening;ip;geolocation;email-validation;phone-validation;api-client</PackageTags>
+    <PackageProjectUrl>https://fraudcheckapi.com</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://fraudcheckapi.com</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <!-- System.Text.Json is in-box from net6.0 onwards; netstandard2.0 needs the package. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+  </ItemGroup>
+
+  <!-- DI wiring is net8.0-only (see ServiceCollectionExtensions): a .NET Framework consumer shouldn't be
+       forced to take Microsoft.Extensions.* just to call an HTTP API. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+  </ItemGroup>
+
+</Project>
