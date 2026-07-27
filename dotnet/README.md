@@ -145,6 +145,50 @@ codes can appear at any time, and an unknown value must never break your deseria
 Weights are additive and clamped to 0–100. Nothing is hidden — you can always explain a score, or recompute
 your own from `Reasons` and ignore ours.
 
+## Your own weighting (`ScoringPolicy`)
+
+Our score is the same for every customer, which means it can't know your business. Throwaway email addresses
+may be the whole problem for a digital-goods seller, while a B2B supplier sees corporate VPNs all day and
+cares far more about a sanctions hit. `ScoringPolicy` re-scores a result using weights you choose.
+
+It runs entirely on your side — no API call, no settings stored with us, and you can unit-test a policy with
+no network.
+
+```csharp
+var policy = new ScoringPolicy("checkout-v3")
+{
+    Weights =
+    {
+        [ReasonCodes.DisposableEmail] = 45,   // hurts us badly
+        [ReasonCodes.DatacenterIp]    = 5,    // half our customers are on a VPN
+        [ReasonCodes.SanctionedName]  = 100,  // always look at this one
+    },
+    Bands = { [40] = "review", [80] = "decline" },
+};
+
+var result = await client.ScreenAsync(ip: "9.9.9.9", email: "user@mailinator.com");
+var assessment = result.Assess(policy);
+
+assessment.Score;       // 50   — yours; result.Score is still ours, untouched
+assessment.Band;        // "review"
+assessment.Explain();   // "checkout-v3 scored 50 (review): DISPOSABLE_EMAIL +45, DATACENTER_IP +5"
+```
+
+Store `Explain()` next to whatever you decided. When you're contesting a chargeback or answering an auditor
+months later, a sentence naming the policy and every contributing signal is evidence in a way a bare number
+isn't — which is also why a policy must be named: retune the weights and `checkout-v3` becomes `checkout-v4`,
+so an old record stays reproducible.
+
+**Codes you haven't weighted.** New reason codes ship over time. By default an unlisted code keeps the weight
+we applied, so a policy written today still reacts to a signal added next year; `assessment.UsedFallbackWeight`
+tells you it happened, which makes a good alert for "something new is firing on our traffic." Set
+`UnknownCodes = UnknownCodeBehavior.Ignore` if you'd rather only your own codes ever move the number — just
+know that's a decision to stop noticing new signals, not a default to accept quietly.
+
+`Score` is not clamped to 0–100: with your own weights, an unbounded total keeps sorting a review queue
+worst-first meaningful. And there's deliberately no `ShouldBlock()` — bands are labels you name, for the same
+reason the API has no `is_fraud` field. The decision stays yours.
+
 ## Verifying webhooks
 
 If you configure webhook endpoints in your dashboard, FraudCheck POSTs signed event notifications to your

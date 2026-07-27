@@ -15,7 +15,9 @@
   <!-- NuGet package metadata -->
   <PropertyGroup>
     <PackageId>FraudCheck.Client</PackageId>
-    <Version>1.0.0</Version>
+    <!-- 1.0.0 is published and immutable; every SDK change ships as a new version. 1.1.0 adds the
+         client-side ScoringPolicy (purely additive — nothing existing changed). -->
+    <Version>1.1.0</Version>
     <Authors>F7 Software</Authors>
     <Company>F7 Software Inc</Company>
     <Product>FraudCheck API</Product>
